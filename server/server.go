@@ -1,15 +1,14 @@
 package server
 
 import (
+	"IOSIF/controllers"
+	"IOSIF/utils"
 	"fmt"
 	"log"
-	"messege-queue/controllers"
-	"messege-queue/models"
 	"net/http"
-	//"messege-queue/models"
 )
 
-func SetupServer(config *models.Config) {
+func SetupServer(config *utils.Config) {
 
 	http.HandleFunc("/topic", controllers.Queue)
 	http.HandleFunc("/topic/subscribe", controllers.Subscribe)

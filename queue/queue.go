@@ -1,10 +1,20 @@
-package models
+package queue
 
-import "errors"
+import (
+	"errors"
+)
 
 type Queue struct {
 	stack        []Message
 	cursorsTable map[string]int
+}
+
+func NewQueue() *Queue {
+	var q Queue
+	q.cursorsTable = map[string]int{}
+	q.stack = []Message{}
+
+	return &q
 }
 
 func (q *Queue) addSubscriber(subscriber string) error {
@@ -25,5 +35,8 @@ func (q *Queue) pushMessage(message Message) {
 }
 
 func (q *Queue) getMessage(subscriber string) Message {
-	return q.stack[q.cursorsTable[subscriber]]
+	message := q.stack[q.cursorsTable[subscriber]]
+	q.cursorsTable[subscriber] = q.cursorsTable[subscriber] + 1
+
+	return message
 }

@@ -1,14 +1,15 @@
 package controllers
 
 import (
+	"IOSIF/manager"
+	"IOSIF/utils"
 	"fmt"
-	"messege-queue/models"
 )
 
-var Manager models.Manager
+var Manager manager.Manager
 
-func CreateManager(config models.Config) {
-	Manager = models.Manager{}
+func CreateManager(config utils.Config) {
+	Manager = manager.Manager{}
 	Manager.Constructor(config)
-	fmt.Println("Manager successfully created")
+	fmt.Println("manager successfully created")
 }

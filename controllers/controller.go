@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"IOSIF/queue"
 	"encoding/json"
 	"fmt"
-	"messege-queue/models"
 	"net/http"
 )
 
@@ -35,7 +35,7 @@ func getMessage(w http.ResponseWriter, r *http.Request) {
 
 func postMessage(w http.ResponseWriter, r *http.Request) {
 
-	var message models.Message
+	var message queue.Message
 
 	if err := json.NewDecoder(r.Body).Decode(&message); err != nil {
 		_, _ = w.Write([]byte(fmt.Sprint(err)))
