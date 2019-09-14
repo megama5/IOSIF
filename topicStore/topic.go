@@ -2,7 +2,6 @@ package topicStore
 
 import (
 	"IOSIF/consumer"
-	"IOSIF/models"
 	"IOSIF/queue"
 )
 
@@ -11,17 +10,32 @@ type Topic struct {
 	queue     queue.Queue
 }
 
-func (t *Topic) getConsumersList() []*consumer.Consumer {
+func NewTopic() Topic {
+
+	q := queue.NewQueue()
+	var cList []*consumer.Consumer
+
+	return Topic{
+		queue:     q,
+		consumers: cList,
+	}
+}
+
+func (t *Topic) GetConsumersList() []*consumer.Consumer {
 	return t.consumers
 }
 
-func (t *Topic) getConsumer(key string) *consumer.Consumer {
+func (t *Topic) GetConsumer(key string) *consumer.Consumer {
 
 	for _, value := range t.consumers {
-		if models.name == key {
+		if value.GetName() == key {
 			return value
 		}
 	}
 
 	return nil
+}
+
+func (t *Topic) AddConsumer(consumer *consumer.Consumer) {
+	t.consumers = append(t.consumers, consumer)
 }

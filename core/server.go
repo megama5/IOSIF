@@ -1,7 +1,6 @@
-package server
+package core
 
 import (
-	"IOSIF/controllers"
 	"IOSIF/utils"
 	"fmt"
 	"log"
@@ -10,8 +9,8 @@ import (
 
 func SetupServer(config *utils.Config) {
 
-	http.HandleFunc("/topic", controllers.Queue)
-	http.HandleFunc("/topic/subscribe", controllers.Subscribe)
+	http.HandleFunc("/topic", Queue)
+	http.HandleFunc("/topic/subscribe", Subscribe)
 
 	fmt.Println("IOSIF successfully started")
 	if err := http.ListenAndServe(config.GetPath(), nil); err != nil {

@@ -1,0 +1,4 @@
+port: 8000
+
+max_workers: 10
+channel_buffer_size: 100

@@ -6,10 +6,11 @@ import (
 )
 
 type Config struct {
-	Port              int
-	Host              string
-	Path              string
-	ChannelBufferSize int
+	Port              int    `yaml:"port"`
+	Host              string `yaml:"host"`
+	Path              string `yaml:"path"`
+	MaxWorkers        int    `yaml:"max_workers"`
+	ChannelBufferSize int    `yaml:"channel_buffer_size"`
 }
 
 func (c *Config) GetPath() string {

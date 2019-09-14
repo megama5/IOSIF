@@ -1,20 +1,20 @@
 package main
 
 import (
-	"IOSIF/controllers"
-	"IOSIF/server"
-	"IOSIF/utils"
+	"IOSIF/core"
+	"fmt"
 )
 
-func main() {
+func supervisor() {
 
-	c := utils.Config{
-		Port:              8000,
-		Host:              "127.0.0.1",
-		ChannelBufferSize: 20,
+	for {
+
+		fmt.Println("more1")
 	}
+}
 
-	controllers.CreateManager(c)
-	server.SetupServer(&c)
-
+func main() {
+	a := "woke up"
+	fmt.Printf("IOSIF %s\n", a)
+	core.Bootstrap(core.ReadConfig("config.yaml"))
 }
