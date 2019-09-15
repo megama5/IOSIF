@@ -1,10 +1,15 @@
 package core
 
 import (
+	"IOSIF/consumer"
 	"IOSIF/queue"
 	"encoding/json"
 	"net/http"
 )
+
+func GetQuery(key string, r *http.Request) string {
+	return r.URL.Query().Get(key)
+}
 
 func Queue(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -26,8 +31,11 @@ func getMessage(w http.ResponseWriter, r *http.Request) {
 func postMessage(w http.ResponseWriter, r *http.Request) {
 	var m queue.Message
 
-	json.NewDecoder(r.Body).Decode(&m)
+	if err := json.NewDecoder(r.Body).Decode(&m); err != nil {
+		_, _ = w.Write([]byte(err.Error()))
+	}
 
+	m.Topic = GetQuery("topic", r)
 	Manager.PushToChannel(m)
 
 	w.WriteHeader(http.StatusCreated)
@@ -38,5 +46,17 @@ func initTopic(w http.ResponseWriter, r *http.Request) {
 }
 
 func Subscribe(w http.ResponseWriter, r *http.Request) {
+	var cons *consumer.Consumer
 
+	topic := GetQuery("topic", r)
+	isAuto := GetQuery("isAutoCounter", r)
+	if isAuto == "true" {
+		cons = ConsumersStore.AddConsumer(true, topic)
+	} else {
+		cons = ConsumersStore.AddConsumer(false, topic)
+	}
+
+	response, _ := json.Marshal(*cons)
+	w.Header().Add("Content-Type", "application/json")
+	_, _ = w.Write(response)
 }

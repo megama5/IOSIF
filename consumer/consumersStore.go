@@ -14,8 +14,9 @@ func NewConsumersStore() ConsumersStore {
 	return cs
 }
 
-func (cs *ConsumersStore) AddConsumer(isAuto bool) *Consumer {
+func (cs *ConsumersStore) AddConsumer(isAuto bool, topic string) *Consumer {
 	c := NewConsumer(isAuto)
+	c.cursors[topic] = -1
 	cs.consumers = append(cs.consumers, c)
 
 	return &c

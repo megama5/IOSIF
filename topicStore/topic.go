@@ -39,3 +39,7 @@ func (t *Topic) GetConsumer(key string) *consumer.Consumer {
 func (t *Topic) AddConsumer(consumer *consumer.Consumer) {
 	t.consumers = append(t.consumers, consumer)
 }
+
+func (t *Topic) PushToQueue(message queue.Message) {
+	t.queue.PushMessage(message)
+}

@@ -6,7 +6,6 @@ import (
 	"IOSIF/queue"
 	"IOSIF/topicStore"
 	"IOSIF/utils"
-	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
@@ -32,7 +31,8 @@ func ReadConfig(confName string) *utils.Config {
 }
 
 func Distributor(message *queue.Message) {
-	fmt.Println(message)
+	topic, _ := TopicStore.GetTopic(message.Topic)
+	topic.PushToQueue(*message)
 }
 
 func Bootstrap(conf *utils.Config) {

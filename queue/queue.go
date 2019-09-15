@@ -1,15 +1,24 @@
 package queue
 
 type Queue struct {
-	stack []Message
+	queue []Message
+	index int
 }
 
 func NewQueue() Queue {
 	var q Queue
-	q.stack = []Message{}
+	q.queue = []Message{}
 	return q
 }
 
-func (q *Queue) pushMessage(message Message) {
-	q.stack = append(q.stack, message)
+func (q *Queue) PushMessage(message Message) Message {
+	if len(q.queue) == 0 {
+		message.Index = 1
+	} else {
+		lastIndex := q.queue[len(q.queue)-1].Index
+		message.Index = lastIndex + 1
+	}
+	q.queue = append(q.queue, message)
+
+	return message
 }
