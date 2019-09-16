@@ -28,7 +28,7 @@ func (t *Topic) GetConsumersList() []*consumer.Consumer {
 func (t *Topic) GetConsumer(key string) *consumer.Consumer {
 
 	for _, value := range t.consumers {
-		if value.GetName() == key {
+		if value.GetToken() == key {
 			return value
 		}
 	}
@@ -38,6 +38,25 @@ func (t *Topic) GetConsumer(key string) *consumer.Consumer {
 
 func (t *Topic) AddConsumer(consumer *consumer.Consumer) {
 	t.consumers = append(t.consumers, consumer)
+}
+
+func (t *Topic) DeleteConsumer(token string) {
+	for index, cons := range t.consumers {
+		if token == cons.GetToken() {
+			before := index - 1
+			if index == 0 {
+				before = 0
+			}
+
+			after := index + 1
+			if index == len(t.consumers)-1 {
+				after = len(t.consumers) - 1
+			}
+
+			t.consumers = append(t.consumers[:before], t.consumers[:after]...)
+			return
+		}
+	}
 }
 
 func (t *Topic) PushToQueue(message queue.Message) {

@@ -5,7 +5,7 @@ import (
 )
 
 type Consumer struct {
-	Name       string `json:"name"`
+	Token      string `json:"token"`
 	autoCursor bool
 	cursors    map[string]int
 }
@@ -15,7 +15,7 @@ func NewConsumer(autoCursor bool) Consumer {
 
 	return Consumer{
 		autoCursor: autoCursor,
-		Name:       name.String(),
+		Token:      name.String(),
 		cursors:    map[string]int{},
 	}
 }
@@ -24,6 +24,6 @@ func (c *Consumer) IsAutoCursorMove() bool {
 	return c.autoCursor
 }
 
-func (c *Consumer) GetName() string {
-	return c.Name
+func (c *Consumer) GetToken() string {
+	return c.Token
 }

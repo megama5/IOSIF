@@ -7,10 +7,7 @@ import (
 	"net/http"
 )
 
-func GetQuery(key string, r *http.Request) string {
-	return r.URL.Query().Get(key)
-}
-
+//<---------------Topic Controllers--------------->
 func Queue(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
@@ -45,6 +42,7 @@ func initTopic(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//<---------------Subscriber Controllers--------------->
 func Subscribe(w http.ResponseWriter, r *http.Request) {
 	var cons *consumer.Consumer
 

@@ -12,13 +12,11 @@ func NewQueue() Queue {
 }
 
 func (q *Queue) PushMessage(message Message) Message {
-	if len(q.queue) == 0 {
-		message.Index = 1
-	} else {
-		lastIndex := q.queue[len(q.queue)-1].Index
-		message.Index = lastIndex + 1
-	}
 	q.queue = append(q.queue, message)
 
 	return message
+}
+
+func (q *Queue) GetIndex() int {
+	return q.index
 }

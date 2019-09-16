@@ -24,7 +24,7 @@ func (cs *ConsumersStore) AddConsumer(isAuto bool, topic string) *Consumer {
 
 func (cs *ConsumersStore) DeleteConsumer(id string) error {
 	for index, c := range cs.consumers {
-		if c.GetName() == id {
+		if c.GetToken() == id {
 			before := index - 1
 			if index == 0 {
 				before = 0
