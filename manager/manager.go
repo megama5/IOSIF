@@ -13,13 +13,13 @@ type Manager struct {
 func NewManager(conf *utils.Config) Manager {
 	m := Manager{}
 	m.factory = Factory{
-		maxWorkers: conf.MaxWorkers,
-		bufferSize: &conf.ChannelBufferSize,
+		maxWorkers: conf.Manager.MaxWorkers,
+		bufferSize: &conf.Manager.ChannelBufferSize,
 	}
-	m.messageChannel = make(chan queue.Message, conf.ChannelBufferSize)
+	m.messageChannel = make(chan queue.Message, conf.Manager.ChannelBufferSize)
 	m.factory.channel = &m.messageChannel
 
-	if conf.MaxWorkers == 0 {
+	if conf.Manager.MaxWorkers == 0 {
 		m.factory.maxWorkers = 20
 	}
 

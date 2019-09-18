@@ -42,3 +42,13 @@ func (cs *ConsumersStore) DeleteConsumer(id string) error {
 
 	return errors.New("unknown consumer id")
 }
+
+func (cs *ConsumersStore) GetConsumer(id string) *Consumer {
+	for _, c := range cs.consumers {
+		if c.GetToken() == id {
+			return &c
+		}
+	}
+
+	return nil
+}

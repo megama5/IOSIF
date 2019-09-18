@@ -1,6 +1,7 @@
 package consumer
 
 import (
+	"fmt"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -26,4 +27,17 @@ func (c *Consumer) IsAutoCursorMove() bool {
 
 func (c *Consumer) GetToken() string {
 	return c.Token
+}
+
+func (c *Consumer) GetCursors() map[string]int {
+	return c.cursors
+}
+
+func (c *Consumer) GetCursor(topic string) int {
+	fmt.Println(c.cursors[topic])
+	return c.cursors[topic]
+}
+
+func (c *Consumer) SetCursor(topic string, messageIndex int) {
+	c.cursors[topic] = messageIndex
 }

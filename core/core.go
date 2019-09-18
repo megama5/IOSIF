@@ -3,6 +3,7 @@ package core
 import (
 	"IOSIF/consumer"
 	"IOSIF/manager"
+	"IOSIF/postgres"
 	"IOSIF/queue"
 	"IOSIF/topicStore"
 	"IOSIF/utils"
@@ -14,6 +15,7 @@ import (
 var TopicStore topicStore.TopicStore
 var ConsumersStore consumer.ConsumersStore
 var Manager manager.Manager
+var Postgres postgres.Postgres
 
 func ReadConfig(confName string) *utils.Config {
 	var config utils.Config
@@ -36,12 +38,14 @@ func Distributor(message *queue.Message) {
 }
 
 func Bootstrap(conf *utils.Config) {
+
+	Postgres = postgres.NewPostgres(conf)
 	TopicStore = topicStore.NewTopicStore()
 	ConsumersStore = consumer.NewConsumersStore()
 	Manager = manager.NewManager(conf)
 
+	Postgres.Connect()
 	Manager.RegisterHandler(Distributor)
-
 	Manager.RunFactory()
 	SetupServer(conf)
 }

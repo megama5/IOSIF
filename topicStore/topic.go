@@ -3,9 +3,12 @@ package topicStore
 import (
 	"IOSIF/consumer"
 	"IOSIF/queue"
+	"fmt"
+	"github.com/pkg/errors"
 )
 
 type Topic struct {
+	name      string
 	consumers []*consumer.Consumer
 	queue     queue.Queue
 }
@@ -16,6 +19,7 @@ func NewTopic() Topic {
 	var cList []*consumer.Consumer
 
 	return Topic{
+		name:      "",
 		queue:     q,
 		consumers: cList,
 	}
@@ -60,5 +64,26 @@ func (t *Topic) DeleteConsumer(token string) {
 }
 
 func (t *Topic) PushToQueue(message queue.Message) {
+	fmt.Println(t, message)
 	t.queue.PushMessage(message)
+}
+
+func (t *Topic) GetFromQueue(id string) (error, queue.Message) {
+	cons := t.GetConsumer(id)
+	cursor := cons.GetCursor(t.name)
+	if cursor == -1 && t.queue.GetIndex() == -1 {
+		return errors.New("empty queue"), queue.Message{}
+	}
+	if cursor == -1 {
+		cursor = t.queue.GetIndex()
+	}
+
+	err, m := t.queue.GetMessage(cursor)
+	if err != nil {
+		return err, m
+	}
+
+	cons.SetCursor(t.name, m.Index)
+
+	return err, m
 }

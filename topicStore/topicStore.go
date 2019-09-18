@@ -14,6 +14,7 @@ func NewTopicStore() TopicStore {
 
 func (ts *TopicStore) CreateTopic(topicName string) {
 	t := NewTopic()
+	t.name = topicName
 	ts.topicsStore[topicName] = &t
 }
 
@@ -22,5 +23,5 @@ func (ts *TopicStore) GetTopic(topicName string) (*Topic, bool) {
 		return ts.topicsStore[topicName], true
 	}
 
-	return &Topic{}, false
+	return nil, false
 }
