@@ -18,7 +18,7 @@ func NewManager(conf *utils.Config) Manager {
 	}
 	m.messageChannel = make(chan queue.Message, conf.Manager.ChannelBufferSize)
 	m.factory.channel = &m.messageChannel
-
+	m.factory.commands = make(chan int, conf.Manager.MaxWorkers)
 	if conf.Manager.MaxWorkers == 0 {
 		m.factory.maxWorkers = 20
 	}
@@ -36,4 +36,11 @@ func (m *Manager) RegisterHandler(handler func(message *queue.Message)) {
 
 func (m *Manager) PushToChannel(message queue.Message) {
 	m.messageChannel <- message
+}
+
+func (m *Manager) Stop() {
+	if recover() != nil {
+		utils.Log("manager stop all process")
+		m.factory.StopFactory()
+	}
 }

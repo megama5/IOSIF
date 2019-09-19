@@ -24,13 +24,16 @@ func (q *Queue) PushMessage(message Message) Message {
 	return message
 }
 
-func (q *Queue) GetMessage(index int) (error, Message) {
-	for _, m := range q.queue {
-		if m.Index == index+1 {
-			return nil, m
+func (q *Queue) GetMessage(id int) (error, Message) {
+	for index, m := range q.queue {
+		if m.Index == id {
+			if len(q.queue) >= index {
+				return nil, q.queue[index]
+			}
+
 		}
 	}
-	return errors.New(""), Message{} //TODO
+	return errors.New("no messages"), Message{} //TODO
 }
 
 func (q *Queue) GetIndex() int {

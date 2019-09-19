@@ -1,6 +1,9 @@
 package queue
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Message struct {
 	TraceId   string `json:"trace_id"`
@@ -13,4 +16,8 @@ type Message struct {
 
 func (m *Message) signTimeStamp() {
 	m.TimeStamp = time.Now().String()
+}
+
+func (m *Message) ToJSON() ([]byte, error) {
+	return json.Marshal(m)
 }

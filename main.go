@@ -14,6 +14,7 @@ func supervisor() {
 }
 
 func main() {
+	defer core.Kill()
 	a := "woke up"
 	fmt.Printf("IOSIF %s\n", a)
 	core.Bootstrap(core.ReadConfig("config.yaml"))

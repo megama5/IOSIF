@@ -2,6 +2,7 @@ package manager
 
 import (
 	"IOSIF/queue"
+	"IOSIF/utils"
 	"time"
 )
 
@@ -23,6 +24,9 @@ func (f *Factory) Supervisor() {
 	for {
 		if *f.bufferSize/2 < len(*f.channel) {
 
+		} else if f.workers == 0 {
+			utils.Log("supervise killed all workers")
+			return
 		} else {
 			if f.workers > 1 {
 				f.commands <- 0
@@ -37,7 +41,7 @@ func (f *Factory) Worker() {
 	for {
 		select {
 		case <-f.commands:
-			break
+			return
 		case message := <-*f.channel:
 			f.handler(&message)
 		}
@@ -46,4 +50,11 @@ func (f *Factory) Worker() {
 
 func (f *Factory) RegisterHandler(handler func(message *queue.Message)) {
 	f.handler = handler
+}
+
+func (f *Factory) StopFactory() {
+	for i := f.workers; i > 0; i-- {
+		f.commands <- 0
+	}
+	f.workers = 0
 }

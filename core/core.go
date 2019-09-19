@@ -1,19 +1,20 @@
 package core
 
 import (
-	"IOSIF/consumer"
 	"IOSIF/manager"
 	"IOSIF/postgres"
 	"IOSIF/queue"
+	"IOSIF/subscriber"
 	"IOSIF/topicStore"
 	"IOSIF/utils"
+	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 )
 
 var TopicStore topicStore.TopicStore
-var ConsumersStore consumer.ConsumersStore
+var SubscibersStore subscriber.SubscribersStore
 var Manager manager.Manager
 var Postgres postgres.Postgres
 
@@ -38,14 +39,18 @@ func Distributor(message *queue.Message) {
 }
 
 func Bootstrap(conf *utils.Config) {
-
 	Postgres = postgres.NewPostgres(conf)
 	TopicStore = topicStore.NewTopicStore()
-	ConsumersStore = consumer.NewConsumersStore()
+	SubscibersStore = subscriber.NewSubscribersStore()
 	Manager = manager.NewManager(conf)
 
 	Postgres.Connect()
 	Manager.RegisterHandler(Distributor)
 	Manager.RunFactory()
 	SetupServer(conf)
+}
+
+func Kill() {
+	fmt.Println("INN")
+	Manager.Stop()
 }
