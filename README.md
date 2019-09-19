@@ -40,11 +40,11 @@ IOSIF is simple message queue. Created for architectures where asynchronous requ
    * URL   `/`
     #####Response
     * Type JSON    
-    `{
+    ```{
          "trace_id": "b26d8035-fbef-4d9d-a4ad-4e1a4e0f699d",  
          "Index": 0,  
          "topic": "test",  
          "time_stamp": "2019-09-19T16:42:50+03:00",  
          "key": "test key",   
          "value": "test value"  
-    }`      
+    }      
