@@ -5,17 +5,10 @@ import (
 	"fmt"
 )
 
-func supervisor() {
-
-	for {
-
-		fmt.Println("more1")
-	}
-}
+const CONFIG_FILE = "config.yaml"
 
 func main() {
 	defer core.Kill()
-	a := "woke up"
-	fmt.Printf("IOSIF %s\n", a)
-	core.Bootstrap(core.ReadConfig("config.yaml"))
+	fmt.Println("IOSIF woke up")
+	core.Bootstrap(core.ReadConfig(CONFIG_FILE))
 }
