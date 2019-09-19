@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"log"
 )
 
 type ServerConfig struct {
@@ -31,10 +30,6 @@ type Config struct {
 
 func (c *Config) GetPath() string {
 	path := ""
-
-	if c.Server.Port == 0 {
-		log.Fatal("Port field is required")
-	}
 
 	path = path + c.Server.Host
 	if c.Server.Host == "" {
