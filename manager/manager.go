@@ -1,6 +1,7 @@
 package manager
 
 import (
+	"IOSIF/config"
 	"IOSIF/queue"
 	"IOSIF/utils"
 )
@@ -10,15 +11,18 @@ type Manager struct {
 	factory        Factory
 }
 
-func NewManager(conf *utils.Config) Manager {
-	m := Manager{}
-	m.factory = Factory{
-		maxWorkers: conf.Manager.MaxWorkers,
-		bufferSize: &conf.Manager.ChannelBufferSize,
+func NewManager(conf *config.Config) Manager {
+	m := Manager{
+		messageChannel: make(chan queue.Message, conf.Manager.ChannelBufferSize),
+		factory: Factory{
+			maxWorkers: conf.Manager.MaxWorkers,
+			workers:    0,
+			bufferSize: &conf.Manager.ChannelBufferSize,
+			commands:   make(chan int, conf.Manager.MaxWorkers),
+		},
 	}
-	m.messageChannel = make(chan queue.Message, conf.Manager.ChannelBufferSize)
+
 	m.factory.channel = &m.messageChannel
-	m.factory.commands = make(chan int, conf.Manager.MaxWorkers)
 	if conf.Manager.MaxWorkers == 0 {
 		m.factory.maxWorkers = 20
 	}
@@ -26,7 +30,7 @@ func NewManager(conf *utils.Config) Manager {
 	return m
 }
 
-func (m *Manager) RunFactory() {
+func (m Manager) RunFactory() {
 	go m.factory.Supervisor()
 }
 

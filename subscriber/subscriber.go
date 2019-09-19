@@ -5,9 +5,9 @@ import (
 )
 
 type Subscriber struct {
-	Token      string `json:"token"`
-	autoCursor bool
-	cursors    map[string]int
+	Token      string         `json:"token"`
+	autoCursor bool           `json:"-"`
+	cursors    map[string]int `json:"-"`
 }
 
 func NewSubscriber(autoCursor bool) Subscriber {
@@ -20,19 +20,15 @@ func NewSubscriber(autoCursor bool) Subscriber {
 	}
 }
 
-func (c *Subscriber) IsAutoCursorMove() bool {
+func (c Subscriber) IsAutoCursorMove() bool {
 	return c.autoCursor
 }
 
-func (c *Subscriber) GetToken() string {
+func (c Subscriber) GetToken() string {
 	return c.Token
 }
 
-//func (c *Subscriber) GetCursors() map[string]int {
-//	return c.cursors
-//}
-
-func (c *Subscriber) GetCursor(topic string) int {
+func (c Subscriber) GetCursor(topic string) int {
 	return c.cursors[topic]
 }
 

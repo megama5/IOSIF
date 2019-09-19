@@ -10,10 +10,10 @@ type Queue struct {
 }
 
 func NewQueue() Queue {
-	var q Queue
-	q.queue = []Message{}
-	q.index = -1
-	return q
+	return Queue{
+		queue: []Message{},
+		index: -1,
+	}
 }
 
 func (q *Queue) PushMessage(message Message) Message {
@@ -36,6 +36,6 @@ func (q *Queue) GetMessage(id int) (error, Message) {
 	return errors.New("no messages"), Message{} //TODO
 }
 
-func (q *Queue) GetIndex() int {
+func (q Queue) GetIndex() int {
 	return q.index
 }

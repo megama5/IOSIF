@@ -7,11 +7,9 @@ type SubscribersStore struct {
 }
 
 func NewSubscribersStore() SubscribersStore {
-	cs := SubscribersStore{}
-
-	cs.subscribers = []Subscriber{}
-
-	return cs
+	return SubscribersStore{
+		subscribers: []Subscriber{},
+	}
 }
 
 func (cs *SubscribersStore) AddSubscriber(isAuto bool, topic string, index int) *Subscriber {

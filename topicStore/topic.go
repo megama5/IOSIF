@@ -10,14 +10,9 @@ type Topic struct {
 }
 
 func NewTopic() Topic {
-
-	q := queue.NewQueue()
-	//var cList []*subscriber.Subscriber
-
 	return Topic{
 		name:  "",
-		queue: q,
-		//consumers: cList,
+		queue: queue.NewQueue(),
 	}
 }
 
@@ -25,10 +20,10 @@ func (t *Topic) PushToQueue(message queue.Message) {
 	t.queue.PushMessage(message)
 }
 
-func (t *Topic) GetFromQueue(id int) (error, queue.Message) {
+func (t Topic) GetFromQueue(id int) (error, queue.Message) {
 	return t.queue.GetMessage(id)
 }
 
-func (t *Topic) GetLastIndex() int {
+func (t Topic) GetLastIndex() int {
 	return t.queue.GetIndex()
 }

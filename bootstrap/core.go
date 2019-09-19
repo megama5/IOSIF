@@ -1,12 +1,12 @@
-package core
+package bootstrap
 
 import (
+	"IOSIF/config"
 	"IOSIF/manager"
 	"IOSIF/postgres"
 	"IOSIF/queue"
 	"IOSIF/subscriber"
 	"IOSIF/topicStore"
-	"IOSIF/utils"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -18,8 +18,8 @@ var SubscibersStore subscriber.SubscribersStore
 var Manager manager.Manager
 var Postgres postgres.Postgres
 
-func ReadConfig(confName string) *utils.Config {
-	var config utils.Config
+func ReadConfig(confName string) *config.Config {
+	var config config.Config
 	yamlFile, err := ioutil.ReadFile(confName)
 	if err != nil {
 		log.Fatal(err)
@@ -38,7 +38,7 @@ func Distributor(message *queue.Message) {
 	topic.PushToQueue(*message)
 }
 
-func Bootstrap(conf *utils.Config) {
+func Bootstrap(conf *config.Config) {
 	Postgres = postgres.NewPostgres(conf)
 	TopicStore = topicStore.NewTopicStore()
 	SubscibersStore = subscriber.NewSubscribersStore()

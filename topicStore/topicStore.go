@@ -5,11 +5,9 @@ type TopicStore struct {
 }
 
 func NewTopicStore() TopicStore {
-	store := TopicStore{}
-
-	store.topicsStore = map[string]*Topic{}
-
-	return store
+	return TopicStore{
+		topicsStore: map[string]*Topic{},
+	}
 }
 
 func (ts *TopicStore) CreateTopic(topicName string) {

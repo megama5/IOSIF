@@ -1,14 +1,14 @@
 package main
 
 import (
-	"IOSIF/core"
+	"IOSIF/bootstrap"
 	"fmt"
 )
 
 const CONFIG_FILE = "config.yaml"
 
 func main() {
-	defer core.Kill()
+	defer bootstrap.Kill()
 	fmt.Println("IOSIF woke up")
-	core.Bootstrap(core.ReadConfig(CONFIG_FILE))
+	bootstrap.Bootstrap(bootstrap.ReadConfig(CONFIG_FILE))
 }

@@ -1,13 +1,13 @@
-package core
+package bootstrap
 
 import (
-	"IOSIF/utils"
+	"IOSIF/config"
 	"fmt"
 	"log"
 	"net/http"
 )
 
-func SetupServer(config *utils.Config) {
+func SetupServer(config *config.Config) {
 
 	if config.Server.Port == 0 {
 		log.Fatal("Port field is required")

@@ -1,8 +1,8 @@
 package postgres
 
 import (
+	"IOSIF/config"
 	"IOSIF/queue"
-	"IOSIF/utils"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
@@ -17,7 +17,7 @@ type Postgres struct {
 	sslmode  bool
 }
 
-func NewPostgres(conf *utils.Config) Postgres {
+func NewPostgres(conf *config.Config) Postgres {
 	p := Postgres{
 		user:     conf.DataBase.User,
 		password: conf.DataBase.Password,
