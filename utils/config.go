@@ -29,18 +29,11 @@ type Config struct {
 }
 
 func (c *Config) GetPath() string {
-	path := ""
 
-	path = path + c.Server.Host
+	path := c.Server.Host
 	if c.Server.Host == "" {
 		path = path + "localhost"
 	}
 
-	path = path + ":" + fmt.Sprint(c.Server.Port)
-
-	if c.Server.Path != "" {
-		path = path + c.Server.Path
-	}
-
-	return path
+	return fmt.Sprint(path, ":", c.Server.Port, c.Server.Path)
 }
