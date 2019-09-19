@@ -14,8 +14,8 @@ type Message struct {
 	Value     string `json:"value"`
 }
 
-func (m *Message) signTimeStamp() {
-	m.TimeStamp = time.Now().String()
+func (m *Message) SignTimeStamp() {
+	m.TimeStamp = time.Now().Format(time.RFC3339)
 }
 
 func (m *Message) ToJSON() ([]byte, error) {

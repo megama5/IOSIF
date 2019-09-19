@@ -63,8 +63,9 @@ func postMessage(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&m); err != nil {
 		_, _ = w.Write([]byte(err.Error()))
 	}
-
+	m.SignTimeStamp()
 	m.Topic = GetQuery("topic", r)
+
 	Manager.PushToChannel(m)
 
 	w.WriteHeader(http.StatusCreated)
