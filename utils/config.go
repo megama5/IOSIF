@@ -32,7 +32,7 @@ func (c *Config) GetPath() string {
 
 	path := c.Server.Host
 	if c.Server.Host == "" {
-		path = path + "localhost"
+		path = "localhost"
 	}
 
 	return fmt.Sprint(path, ":", c.Server.Port, c.Server.Path)
