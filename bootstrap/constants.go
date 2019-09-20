@@ -1,6 +1,9 @@
 package bootstrap
 
-//<------------------HEADERS------------------>
+//Config
+const ConfigFile = "config.yaml"
+
+//HEADERS
 const (
 	TokenHeader = "x-sub-token"
 )

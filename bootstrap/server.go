@@ -19,7 +19,7 @@ func SetupServer(config *config.Config) {
 
 	fmt.Println("IOSIF successfully started")
 	if err := http.ListenAndServe(config.GetPath(), nil); err != nil {
-		Kill()
+		Manager.Stop()
 		log.Fatal(err)
 	}
 }

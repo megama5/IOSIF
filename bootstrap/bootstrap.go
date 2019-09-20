@@ -7,7 +7,6 @@ import (
 	"IOSIF/postgres"
 	"IOSIF/subscriber"
 	"IOSIF/topicStore"
-	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
@@ -38,7 +37,8 @@ func Distributor(message *message.Message) {
 	topic.PushToQueue(*message)
 }
 
-func Bootstrap(conf *config.Config) {
+func Go() {
+	conf := ReadConfig(ConfigFile)
 	Postgres = postgres.NewPostgres(conf)
 	TopicStore = topicStore.NewTopicStore()
 	SubscibersStore = subscriber.NewSubscribersStore()
@@ -48,9 +48,4 @@ func Bootstrap(conf *config.Config) {
 	Manager.RegisterHandler(Distributor)
 	Manager.RunFactory()
 	SetupServer(conf)
-}
-
-func Kill() {
-	fmt.Println("INN")
-	Manager.Stop()
 }
