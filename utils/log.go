@@ -12,3 +12,7 @@ func Log(logData interface{}) {
 
 	fmt.Println(fmt.Sprint(timeStamp, logData))
 }
+
+func LogAction(themplate string, data string) {
+	Log(fmt.Sprintf(themplate, data))
+}

@@ -2,18 +2,18 @@ package manager
 
 import (
 	"IOSIF/config"
-	"IOSIF/queue"
+	"IOSIF/message"
 	"IOSIF/utils"
 )
 
 type Manager struct {
-	messageChannel chan queue.Message
+	messageChannel chan message.Message
 	factory        Factory
 }
 
 func NewManager(conf *config.Config) Manager {
 	m := Manager{
-		messageChannel: make(chan queue.Message, conf.Manager.ChannelBufferSize),
+		messageChannel: make(chan message.Message, conf.Manager.ChannelBufferSize),
 		factory: Factory{
 			maxWorkers: conf.Manager.MaxWorkers,
 			workers:    0,
@@ -26,25 +26,28 @@ func NewManager(conf *config.Config) Manager {
 	if conf.Manager.MaxWorkers == 0 {
 		m.factory.maxWorkers = 20
 	}
-
+	utils.Log(ManagerCreated)
 	return m
 }
 
 func (m Manager) RunFactory() {
+	utils.Log(ManagerStartFactory)
 	go m.factory.Supervisor()
 }
 
-func (m *Manager) RegisterHandler(handler func(message *queue.Message)) {
+func (m *Manager) RegisterHandler(handler func(message *message.Message)) {
 	m.factory.RegisterHandler(handler)
+	utils.Log(ManagerReciveHandler)
 }
 
-func (m *Manager) PushToChannel(message queue.Message) {
+func (m *Manager) PushToChannel(message message.Message) {
 	m.messageChannel <- message
+	utils.Log(ManagerPush)
 }
 
 func (m *Manager) Stop() {
 	if recover() != nil {
-		utils.Log("manager stop all process")
+		utils.Log(ManagerStopFactory)
 		m.factory.StopFactory()
 	}
 }

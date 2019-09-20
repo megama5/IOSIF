@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"IOSIF/config"
-	"IOSIF/queue"
+	"IOSIF/message"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
@@ -42,6 +42,6 @@ func (p *Postgres) Connect() {
 	p.DB = conn
 }
 
-func (p *Postgres) AddLog(message queue.Message) {
+func (p *Postgres) AddLog(message message.Message) {
 
 }

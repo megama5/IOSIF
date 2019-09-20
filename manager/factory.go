@@ -1,7 +1,7 @@
 package manager
 
 import (
-	"IOSIF/queue"
+	"IOSIF/message"
 	"IOSIF/utils"
 	"time"
 )
@@ -11,8 +11,8 @@ type Factory struct {
 	workers    int
 	bufferSize *int
 	commands   chan int
-	channel    *chan queue.Message
-	handler    func(message *queue.Message)
+	channel    *chan message.Message
+	handler    func(message *message.Message)
 }
 
 func (f *Factory) Supervisor() {
@@ -29,6 +29,7 @@ func (f *Factory) Supervisor() {
 			return
 		} else {
 			if f.workers > 1 {
+				utils.Log(FactoryKillWorker)
 				f.commands <- 0
 			}
 		}
@@ -38,6 +39,7 @@ func (f *Factory) Supervisor() {
 }
 
 func (f *Factory) Worker() {
+	utils.Log(FactoryNewWorker)
 	for {
 		select {
 		case <-f.commands:
@@ -48,13 +50,14 @@ func (f *Factory) Worker() {
 	}
 }
 
-func (f *Factory) RegisterHandler(handler func(message *queue.Message)) {
+func (f *Factory) RegisterHandler(handler func(message *message.Message)) {
 	f.handler = handler
 }
 
 func (f *Factory) StopFactory() {
 	for i := f.workers; i > 0; i-- {
 		f.commands <- 0
+		utils.Log(FactoryKillWorker)
 	}
 	f.workers = 0
 }

@@ -3,8 +3,8 @@ package bootstrap
 import (
 	"IOSIF/config"
 	"IOSIF/manager"
+	"IOSIF/message"
 	"IOSIF/postgres"
-	"IOSIF/queue"
 	"IOSIF/subscriber"
 	"IOSIF/topicStore"
 	"fmt"
@@ -33,7 +33,7 @@ func ReadConfig(confName string) *config.Config {
 	return &config
 }
 
-func Distributor(message *queue.Message) {
+func Distributor(message *message.Message) {
 	topic, _ := TopicStore.GetTopic(message.Topic)
 	topic.PushToQueue(*message)
 }

@@ -1,26 +1,26 @@
 package topicStore
 
 import (
-	"IOSIF/queue"
+	"IOSIF/message"
 )
 
 type Topic struct {
 	name  string
-	queue queue.Queue
+	queue Queue
 }
 
-func NewTopic() Topic {
+func NewTopic(topic string) Topic {
 	return Topic{
-		name:  "",
-		queue: queue.NewQueue(),
+		name:  topic,
+		queue: NewQueue(),
 	}
 }
 
-func (t *Topic) PushToQueue(message queue.Message) {
+func (t *Topic) PushToQueue(message message.Message) {
 	t.queue.PushMessage(message)
 }
 
-func (t Topic) GetFromQueue(id int) (error, queue.Message) {
+func (t Topic) GetFromQueue(id int) (error, message.Message) {
 	return t.queue.GetMessage(id)
 }
 

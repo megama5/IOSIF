@@ -1,9 +1,8 @@
 package bootstrap
 
 import (
-	"IOSIF/queue"
+	"IOSIF/message"
 	"IOSIF/subscriber"
-	"IOSIF/utils"
 	"encoding/json"
 	"net/http"
 )
@@ -25,46 +24,56 @@ func Queue(w http.ResponseWriter, r *http.Request) {
 
 func getMessage(w http.ResponseWriter, r *http.Request) {
 	defer Manager.Stop()
-	subscriberId := GetHeader(TOKEN_HEADER, r)
+
+	subscriberId := GetHeader(TokenHeader, r)
 	err, sub := SubscibersStore.GetSubscriber(subscriberId)
 	if err != nil {
-		_, _ = w.Write([]byte(err.Error()))
+		SendError(err, http.StatusNotFound, w)
 		return
 	}
 
 	topicId := GetQuery("topic", r)
 	cursor := sub.GetCursor(topicId)
-	topic, ok := TopicStore.GetTopic(topicId)
-	if !ok {
-		w.WriteHeader(http.StatusNotFound)
+	topic, err := TopicStore.GetTopic(topicId)
+	if err != nil {
+		SendError(err, http.StatusNotFound, w)
 		return
 	}
 
-	err, message := topic.GetFromQueue(cursor + 1)
+	err, mes := topic.GetFromQueue(cursor + 1)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
+		SendError(err, http.StatusNotFound, w)
 		return
 	}
 
-	response, err := message.ToJSON()
+	response, err := mes.ToJSON()
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
+		SendError(err, http.StatusNotFound, w)
 		return
 	}
-	sub.SetCursor(message.Topic, message.Index)
+
+	sub.SetCursor(mes.Topic, mes.Index)
 	_, _ = w.Write(response)
 
 }
 
 func postMessage(w http.ResponseWriter, r *http.Request) {
 	defer Manager.Stop()
-	var m queue.Message
+	var m message.Message
 
 	if err := json.NewDecoder(r.Body).Decode(&m); err != nil {
-		_, _ = w.Write([]byte(err.Error()))
+		SendError(err, http.StatusNotFound, w)
+		return
 	}
+
 	m.SignTimeStamp()
 	m.Topic = GetQuery("topic", r)
+
+	_, err := TopicStore.GetTopic(m.Topic)
+	if err != nil {
+		SendError(err, http.StatusNotFound, w)
+		return
+	}
 
 	Manager.PushToChannel(m)
 
@@ -74,42 +83,41 @@ func postMessage(w http.ResponseWriter, r *http.Request) {
 func createTopic(w http.ResponseWriter, r *http.Request) {
 	topicName := GetQuery("topic", r)
 
-	if _, ok := TopicStore.GetTopic(topicName); ok {
-		w.WriteHeader(http.StatusConflict)
+	if err := TopicStore.CreateTopic(topicName); err != nil {
+		SendError(err, http.StatusConflict, w)
 		return
 	}
 
-	TopicStore.CreateTopic(topicName)
-	utils.Log("new topic creating " + topicName)
 	w.WriteHeader(http.StatusCreated)
 }
 
 //<---------------Subscriber Controllers--------------->
 func Subscribe(w http.ResponseWriter, r *http.Request) {
-	var cons *subscriber.Subscriber
+	w.Header().Add("Content-Type", "application/json")
 
+	var cons *subscriber.Subscriber
 	topicName := GetQuery("topic", r)
-	topic, ok := TopicStore.GetTopic(topicName)
-	if !ok {
-		w.WriteHeader(http.StatusNotFound)
+
+	topic, err := TopicStore.GetTopic(topicName)
+	if err != nil {
+		SendError(err, http.StatusNotFound, w)
 		return
 	}
 
 	isAuto := GetQuery("autoCounter", r) == "true"
 	cons = SubscibersStore.AddSubscriber(isAuto, topicName, topic.GetLastIndex())
 
-	utils.Log("user subscribe on topicName " + topicName)
 	response, _ := json.Marshal(*cons)
-	w.Header().Add("Content-Type", "application/json")
+
 	_, _ = w.Write(response)
 }
 
 func UnSubscribe(w http.ResponseWriter, r *http.Request) {
-	token := GetHeader(TOKEN_HEADER, r)
+	token := GetHeader(TokenHeader, r)
 
 	err := SubscibersStore.DeleteSubscriber(token)
 	if err != nil {
-		w.WriteHeader(http.StatusConflict)
+		SendError(err, http.StatusConflict, w)
 		return
 	}
 

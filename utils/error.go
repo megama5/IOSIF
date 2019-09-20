@@ -1,22 +1,28 @@
 package utils
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Error struct {
-	Message string `json:"message"`
+	StatusCode int    `json:"statusCode"`
+	Message    string `json:"message"`
 }
 
-func NewError(message string) Error {
+func NewError(message string, statusCode int) Error {
 	return Error{
-		Message: message,
+		StatusCode: statusCode,
+		Message:    message,
 	}
 }
 
-func (e Error) toJSON() ([]byte, error) {
+func (e Error) ToJSON() ([]byte, error) {
 	JSON, err := json.Marshal(e)
 	if err != nil {
 		return nil, err
 	}
+
+	Log(e.Message)
 
 	return JSON, nil
 }

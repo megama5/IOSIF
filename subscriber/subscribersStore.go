@@ -1,6 +1,9 @@
 package subscriber
 
-import "errors"
+import (
+	"IOSIF/utils"
+	"errors"
+)
 
 type SubscribersStore struct {
 	subscribers []Subscriber
@@ -16,7 +19,7 @@ func (cs *SubscribersStore) AddSubscriber(isAuto bool, topic string, index int) 
 	c := NewSubscriber(isAuto)
 	c.cursors[topic] = index
 	cs.subscribers = append(cs.subscribers, c)
-
+	utils.LogAction(SubscriberCreated, c.Token)
 	return &c
 }
 
@@ -34,11 +37,12 @@ func (cs *SubscribersStore) DeleteSubscriber(id string) error {
 			}
 
 			cs.subscribers = append(cs.subscribers[:before], cs.subscribers[:after]...)
+			utils.LogAction(SubscriberDeleted, id)
 			return nil
 		}
 	}
 
-	return errors.New("unknown subscriber id")
+	return errors.New(UnknownSubscriber)
 }
 
 func (cs *SubscribersStore) GetSubscriber(id string) (error, *Subscriber) {
@@ -48,5 +52,5 @@ func (cs *SubscribersStore) GetSubscriber(id string) (error, *Subscriber) {
 		}
 	}
 
-	return errors.New("unknown subscriber"), nil
+	return errors.New(UnknownSubscriber), nil
 }
