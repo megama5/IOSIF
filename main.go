@@ -3,9 +3,12 @@ package main
 import (
 	"IOSIF/bootstrap"
 	"fmt"
+	"log"
 )
 
 func main() {
 	fmt.Println("IOSIF woke up")
-	bootstrap.Go()
+	if err := bootstrap.Run(); err != nil {
+		log.Fatal(err)
+	}
 }

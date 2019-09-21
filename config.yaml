@@ -1,9 +1,9 @@
 server:
   port: 8000
 manager:
-  max_workers: 10
-  channel_buffer_size: 100
-data_base:
-  db_name: "iosifdb"
+  maxWorkers: 10
+  channelBufferSize: 100
+dataBase:
+  dbBame: "iosifdb"
   user: "iosif"
   password: "iosif"

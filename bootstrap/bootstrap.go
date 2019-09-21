@@ -4,32 +4,31 @@ import (
 	"IOSIF/config"
 	"IOSIF/manager"
 	"IOSIF/message"
-	"IOSIF/postgres"
+	"IOSIF/repositories"
 	"IOSIF/subscriber"
 	"IOSIF/topicStore"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"log"
 )
 
 var TopicStore topicStore.TopicStore
-var SubscibersStore subscriber.SubscribersStore
+var SubscribersStore subscriber.SubscribersStore
 var Manager manager.Manager
-var Postgres postgres.Postgres
+var Postgres repositories.Postgres
 
-func ReadConfig(confName string) *config.Config {
-	var config config.Config
+func ReadConfig(confName string) (*config.Config, error) {
+	var conf config.Config
 	yamlFile, err := ioutil.ReadFile(confName)
 	if err != nil {
-		log.Fatal(err)
+		return &conf, err
 	}
 
-	err = yaml.Unmarshal(yamlFile, &config)
+	err = yaml.Unmarshal(yamlFile, &conf)
 	if err != nil {
-		log.Fatal(err)
+		return &conf, err
 	}
 
-	return &config
+	return &conf, nil
 }
 
 func Distributor(message *message.Message) {
@@ -37,15 +36,24 @@ func Distributor(message *message.Message) {
 	topic.PushToQueue(*message)
 }
 
-func Go() {
-	conf := ReadConfig(ConfigFile)
-	Postgres = postgres.NewPostgres(conf)
+func Run() error {
+	conf, err := ReadConfig(ConfigFile)
+	if err != nil {
+		return err
+	}
+	Postgres = repositories.NewPostgres(conf)
 	TopicStore = topicStore.NewTopicStore()
-	SubscibersStore = subscriber.NewSubscribersStore()
+	SubscribersStore = subscriber.NewSubscribersStore()
 	Manager = manager.NewManager(conf)
 
-	Postgres.Connect()
+	if err = Postgres.Connect(); err != nil {
+		return err
+	}
 	Manager.RegisterHandler(Distributor)
 	Manager.RunFactory()
-	SetupServer(conf)
+	if err = SetupServer(conf); err != nil {
+		return err
+	}
+
+	return nil
 }
