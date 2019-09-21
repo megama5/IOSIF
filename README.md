@@ -25,7 +25,10 @@ IOSIF is simple message queue. Created for architectures where asynchronous requ
    * URL   `/unsubscribe`
     ##### Response
     * Type JSON  
-    `{"topic": "75e22153-e207-4be6-a58c-f5a09e4de36c"}`
+    ```
+    {
+        "topic": "75e22153-e207-4be6-a58c-f5a09e4de36c"
+    }
 * Push message
     ##### Request
    * Method `POST`  

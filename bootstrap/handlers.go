@@ -26,7 +26,7 @@ func getMessage(w http.ResponseWriter, r *http.Request) {
 	defer Manager.Stop()
 
 	subscriberId := GetHeader(TokenHeader, r)
-	err, sub := SubscibersStore.GetSubscriber(subscriberId)
+	err, sub := SubscribersStore.GetSubscriber(subscriberId)
 	if err != nil {
 		SendError(err, http.StatusNotFound, w)
 		return
@@ -105,7 +105,7 @@ func Subscribe(w http.ResponseWriter, r *http.Request) {
 	}
 
 	isAuto := GetQuery("autoCounter", r) == "true"
-	cons = SubscibersStore.AddSubscriber(isAuto, topicName, topic.GetLastIndex())
+	cons = SubscribersStore.AddSubscriber(isAuto, topicName, topic.GetLastIndex())
 
 	response, _ := json.Marshal(*cons)
 
@@ -115,7 +115,7 @@ func Subscribe(w http.ResponseWriter, r *http.Request) {
 func UnSubscribe(w http.ResponseWriter, r *http.Request) {
 	token := GetHeader(TokenHeader, r)
 
-	err := SubscibersStore.DeleteSubscriber(token)
+	err := SubscribersStore.DeleteSubscriber(token)
 	if err != nil {
 		SendError(err, http.StatusConflict, w)
 		return

@@ -2,15 +2,15 @@ package bootstrap
 
 import (
 	"IOSIF/config"
+	"errors"
 	"fmt"
-	"log"
 	"net/http"
 )
 
-func SetupServer(config *config.Config) {
+func SetupServer(config *config.Config) error {
 
 	if config.Server.Port == 0 {
-		log.Fatal("Port field is required")
+		return errors.New(PortAbsent)
 	}
 
 	http.HandleFunc("/", Queue)
@@ -18,8 +18,5 @@ func SetupServer(config *config.Config) {
 	http.HandleFunc("/unsubscribe", UnSubscribe)
 
 	fmt.Println("IOSIF successfully started")
-	if err := http.ListenAndServe(config.GetPath(), nil); err != nil {
-		Manager.Stop()
-		log.Fatal(err)
-	}
+	return http.ListenAndServe(config.GetPath(), nil)
 }
