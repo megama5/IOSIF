@@ -3,7 +3,12 @@ package bootstrap
 //Config
 const ConfigFile = "config.yaml"
 
-//HEADERS
+//Headers
 const (
 	TokenHeader = "x-sub-token"
+)
+
+//Errors
+const (
+	PortAbsent = "port field is required"
 )

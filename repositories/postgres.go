@@ -1,12 +1,10 @@
-package postgres
+package repositories
 
 import (
 	"IOSIF/config"
-	"IOSIF/message"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"log"
 )
 
 type Postgres struct {
@@ -28,7 +26,7 @@ func NewPostgres(conf *config.Config) Postgres {
 	return p
 }
 
-func (p *Postgres) Connect() {
+func (p *Postgres) Connect() error {
 	connStr := fmt.Sprintf("user=%s ", p.user)
 	connStr = connStr + fmt.Sprintf("password=%s ", p.password)
 	connStr = connStr + fmt.Sprintf("dbname=%s", p.dbName)
@@ -36,12 +34,9 @@ func (p *Postgres) Connect() {
 	conn, err := sql.Open("postgres", connStr)
 	if err != nil {
 		defer conn.Close()
-		log.Fatal(err)
+		return err
 	}
 
 	p.DB = conn
-}
-
-func (p *Postgres) AddLog(message message.Message) {
-
+	return nil
 }

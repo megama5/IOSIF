@@ -11,21 +11,21 @@ type ServerConfig struct {
 }
 
 type ManagerConfig struct {
-	MaxWorkers        int `yaml:"max_workers"`
-	ChannelBufferSize int `yaml:"channel_buffer_size"`
+	MaxWorkers        int `yaml:"maxWorkers"`
+	ChannelBufferSize int `yaml:"channelBufferSize"`
 }
 
 type DataBaseConfig struct {
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
-	DBName   string `yaml:"db_name"`
-	SSLMode  bool   `yaml:"ssl_mode"`
+	DBName   string `yaml:"dbName"`
+	SSLMode  bool   `yaml:"sslMode"`
 }
 
 type Config struct {
 	Server   ServerConfig   `yaml:"server"`
 	Manager  ManagerConfig  `yaml:"manager"`
-	DataBase DataBaseConfig `yaml:"data_base"`
+	DataBase DataBaseConfig `yaml:"database"`
 }
 
 func (c *Config) GetPath() string {
