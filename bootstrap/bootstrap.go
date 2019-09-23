@@ -7,6 +7,7 @@ import (
 	"IOSIF/repositories"
 	"IOSIF/subscriber"
 	"IOSIF/topicStore"
+	"IOSIF/utils"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 )
@@ -34,6 +35,11 @@ func ReadConfig(confName string) (*config.Config, error) {
 func Distributor(message *message.Message) {
 	topic, _ := TopicStore.GetTopic(message.Topic)
 	topic.PushToQueue(*message)
+
+	err := Postgres.Insert(*message)
+	if err != nil {
+		utils.Log(err)
+	}
 }
 
 func Run() error {

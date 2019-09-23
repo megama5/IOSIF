@@ -3,7 +3,7 @@
 IOSIF is simple message queue. Created for architectures where asynchronous requests are used.  
 
 
-#### Tutorial
+#### Endpoints
 
 * Create topic
     ##### Request  
