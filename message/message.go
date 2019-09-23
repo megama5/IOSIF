@@ -6,12 +6,12 @@ import (
 )
 
 type Message struct {
-	TraceId   string `json:"trace_id"`
-	Index     int    `json:"index"`
-	Topic     string `json:"topic"`
-	TimeStamp string `json:"time_stamp"`
-	Key       string `json:"key"`
-	Value     string `json:"value"`
+	TraceId   string `json:"traceId" sql:"traceId"`
+	Index     int    `json:"index" sql:"index"`
+	Topic     string `json:"topic" sql:"topic"`
+	TimeStamp string `json:"time_stamp" sql:"time_stamp"`
+	Key       string `json:"key" sql:"key"`
+	Value     string `json:"value" sql:"value"`
 }
 
 func (m *Message) SignTimeStamp() {
