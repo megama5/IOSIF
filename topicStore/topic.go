@@ -20,10 +20,22 @@ func (t *Topic) PushToQueue(message message.Message) {
 	t.queue.PushMessage(message)
 }
 
+func (t Topic) GetAllFromQueue() []message.Message {
+	return t.queue.queue
+}
+
 func (t Topic) GetFromQueue(id int) (error, message.Message) {
 	return t.queue.GetMessage(id)
 }
 
 func (t Topic) GetLastIndex() int {
 	return t.queue.GetIndex()
+}
+
+func (t Topic) GetQueueLen() int {
+	return len(t.queue.queue)
+}
+
+func (t *Topic) DeleteFromQueue(index int) {
+	t.queue.DeleteMessage(index)
 }

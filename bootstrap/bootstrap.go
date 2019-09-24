@@ -8,6 +8,7 @@ import (
 	"IOSIF/subscriber"
 	"IOSIF/topicStore"
 	"IOSIF/utils"
+	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 )
@@ -42,6 +43,18 @@ func Distributor(message *message.Message) {
 	}
 }
 
+func Cleaner(message message.Message) {
+	top, err := TopicStore.GetTopic(message.Topic)
+	if err != nil {
+		utils.Log(err)
+		return
+	}
+	fmt.Println(message)
+	top.DeleteFromQueue(message.Index)
+
+	Postgres.Delete(message)
+}
+
 func Run() error {
 	conf, err := ReadConfig(ConfigFile)
 	if err != nil {
@@ -55,8 +68,10 @@ func Run() error {
 	if err = Postgres.Connect(); err != nil {
 		return err
 	}
-	Manager.RegisterHandler(Distributor)
+	Manager.RegisterWorkerHandler(Distributor)
+	Manager.RegisterCleanerHandler(Cleaner)
 	Manager.RunFactory()
+	Manager.RunCleaner()
 	if err = SetupServer(conf); err != nil {
 		return err
 	}

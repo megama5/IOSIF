@@ -7,6 +7,7 @@ const (
 	ManagerReciveHandler = "manager receive handler"
 	ManagerPush          = "manager push message to channel"
 	ManagerStopFactory   = "manager stopping factory"
+	ManagerKillCleaner   = "manager stopped cleaner"
 )
 
 //Factory Actions

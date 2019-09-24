@@ -3,6 +3,7 @@ server:
 manager:
   maxWorkers: 10
   channelBufferSize: 100
+  messageLifetime: 10
 database:
   dbName: "iosifdb"
   user: "iosif"

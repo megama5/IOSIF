@@ -38,6 +38,24 @@ func (q *Queue) GetMessage(id int) (error, message.Message) {
 	return errors.New(ReadAllMessages), message.Message{}
 }
 
+func (q *Queue) DeleteMessage(index int) {
+	for i, mes := range q.queue {
+		if mes.Index == index {
+			before := i - 1
+			if i == 0 {
+				before = 0
+			}
+
+			after := index + 1
+			if i == len(q.queue)-1 {
+				after = len(q.queue) - 1
+			}
+
+			q.queue = append(q.queue[:before], q.queue[:after]...)
+		}
+	}
+}
+
 func (q Queue) GetIndex() int {
 	return q.index
 }

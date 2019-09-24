@@ -11,8 +11,9 @@ type ServerConfig struct {
 }
 
 type ManagerConfig struct {
-	MaxWorkers        int `yaml:"maxWorkers"`
-	ChannelBufferSize int `yaml:"channelBufferSize"`
+	MaxWorkers        int   `yaml:"maxWorkers"`
+	ChannelBufferSize int   `yaml:"channelBufferSize"`
+	MessageLifetime   int64 `yaml:"messageLifetime"`
 }
 
 type DataBaseConfig struct {
