@@ -5,6 +5,7 @@ manager:
   channelBufferSize: 100
   messageLifetime: 10
 database:
+  driver: "postgres"
   dbName: "iosifdb"
   user: "iosif"
   password: "iosif"

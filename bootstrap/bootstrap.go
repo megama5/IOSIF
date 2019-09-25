@@ -16,7 +16,7 @@ import (
 var TopicStore topicStore.TopicStore
 var SubscribersStore subscriber.SubscribersStore
 var Manager manager.Manager
-var Postgres repositories.Postgres
+var Repository repositories.Repository
 
 func ReadConfig(confName string) (*config.Config, error) {
 	var conf config.Config
@@ -37,7 +37,7 @@ func Distributor(message *message.Message) {
 	topic, _ := TopicStore.GetTopic(message.Topic)
 	topic.PushToQueue(*message)
 
-	err := Postgres.Insert(*message)
+	err := Repository.Insert(*message)
 	if err != nil {
 		utils.Log(err)
 	}
@@ -52,7 +52,7 @@ func Cleaner(message message.Message) {
 	fmt.Println(message)
 	top.DeleteFromQueue(message.Index)
 
-	Postgres.Delete(message)
+	Repository.Delete(message)
 }
 
 func Run() error {
@@ -60,12 +60,16 @@ func Run() error {
 	if err != nil {
 		return err
 	}
-	Postgres = repositories.NewPostgres(conf)
+	Repository, err = repositories.NewRepository(conf)
+	if err != nil {
+		return err
+	}
+
 	TopicStore = topicStore.NewTopicStore()
 	SubscribersStore = subscriber.NewSubscribersStore()
 	Manager = manager.NewManager(conf)
 
-	if err = Postgres.Connect(); err != nil {
+	if err = Repository.Connect(); err != nil {
 		return err
 	}
 	Manager.RegisterWorkerHandler(Distributor)

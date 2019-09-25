@@ -9,7 +9,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type Postgres struct {
+type postgres struct {
 	DB           *sql.DB
 	user         string
 	password     string
@@ -18,8 +18,8 @@ type Postgres struct {
 	sslmode      bool
 }
 
-func NewPostgres(conf *config.Config) Postgres {
-	p := Postgres{
+func NewPostgres(conf *config.Config) *postgres {
+	p := postgres{
 		user:         conf.DataBase.User,
 		password:     conf.DataBase.Password,
 		dbName:       conf.DataBase.DBName,
@@ -27,10 +27,10 @@ func NewPostgres(conf *config.Config) Postgres {
 		messageTable: "messages",
 	}
 
-	return p
+	return &p
 }
 
-func (p *Postgres) Connect() error {
+func (p *postgres) Connect() error {
 
 	connStr := fmt.Sprintf("user=%s password=%s dbname=%s ", p.user, p.password, p.dbName)
 	connStr = connStr + "sslmode=disable"
@@ -56,7 +56,7 @@ func (p *Postgres) Connect() error {
 	return nil
 }
 
-func (p Postgres) createTable() error {
+func (p postgres) createTable() error {
 	table := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (TraceId text, Index int, Topic text, TimeStamp text, Key text, Value text)", p.messageTable)
 	_, err := p.DB.Exec(table)
 	if err != nil {
@@ -66,7 +66,7 @@ func (p Postgres) createTable() error {
 	return nil
 }
 
-func (p Postgres) Insert(m message.Message) error {
+func (p postgres) Insert(m message.Message) error {
 	value := fmt.Sprintf("VALUES ('%s', %d, '%s', '%s', '%s', '%s')", m.TraceId, m.Index, m.Topic, m.TimeStamp, m.Key, m.Value)
 	query := fmt.Sprintf("INSERT INTO %s %s", p.messageTable, value)
 
@@ -79,7 +79,7 @@ func (p Postgres) Insert(m message.Message) error {
 	return nil
 }
 
-func (p Postgres) Delete(m message.Message) error {
+func (p postgres) Delete(m message.Message) error {
 	value := fmt.Sprintf("DELETE FROM %s WHERE Topic = '%s' AND Index = %d", p.messageTable, m.Topic, m.Index)
 
 	_, err := p.DB.Exec(value)

@@ -2,6 +2,9 @@
 
 IOSIF is simple message queue. Created for architectures where asynchronous requests are used.  
 
+![](https://img.shields.io/github/issues/KoDDrovosek/IOSIF) 
+![](https://img.shields.io/github/release-date-pre/KoDDrovosek/IOSIF) 
+![](https://img.shields.io/github/stars/KoDDrovosek/IOSIF) 
 
 #### Endpoints
 
