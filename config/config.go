@@ -17,6 +17,7 @@ type ManagerConfig struct {
 }
 
 type DataBaseConfig struct {
+	Driver   string `yaml:"driver"`
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 	DBName   string `yaml:"dbName"`

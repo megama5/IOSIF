@@ -1,6 +1,17 @@
 package repositories
 
-import "IOSIF/message"
+import (
+	"IOSIF/config"
+	"IOSIF/message"
+	"errors"
+	"fmt"
+)
+
+const (
+	PostgresDB = "postgres"
+)
+
+var availableDrivers = []string{PostgresDB}
 
 type Driver interface {
 	Connect() error
@@ -9,20 +20,34 @@ type Driver interface {
 }
 
 type Repository struct {
-	currentDb string
-	drivers   map[string]*Driver
+	currentDriver string
+	drivers       map[string]Driver
 }
 
-func NewRepository() Repository {
-	repo := Repository{}
+func NewRepository(config *config.Config) (Repository, error) {
 
-	return
+	for _, v := range availableDrivers {
+		if v == config.DataBase.Driver {
+			return Repository{
+				currentDriver: config.DataBase.Driver,
+				drivers: map[string]Driver{
+					PostgresDB: NewPostgres(config),
+				},
+			}, nil
+		}
+	}
+
+	return Repository{}, errors.New(fmt.Sprintf("unknown driver -> %s", config.DataBase.Driver))
 }
 
-func (r *Repository) AddOne(message message.Message) {
-
+func (r *Repository) Connect() error {
+	return r.drivers[r.currentDriver].Connect()
 }
 
-func (r *Repository) DeleteOne(message message.Message) {
+func (r *Repository) Insert(message message.Message) error {
+	return r.drivers[r.currentDriver].Insert(message)
+}
 
+func (r *Repository) Delete(message message.Message) error {
+	return r.drivers[r.currentDriver].Delete(message)
 }
