@@ -24,9 +24,9 @@ type Manager struct {
 
 func Init(conf *config.Config) *Manager {
 	manager := &Manager{
-		topicStore:            map[string]*Queue{},
-		subscribersStore:      map[string]*Subscriber{},
-		publishersStore:       map[string]*Publisher{},
+		topicStore:            make(map[string]*Queue),
+		subscribersStore:      make(map[string]*Subscriber),
+		publishersStore:       make(map[string]*Publisher),
 		workersCount:          0,
 		workersCMDChannel:     make(chan bool, conf.Manager.WorkersCount),
 		shouldMainWorkerClose: false,

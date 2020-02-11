@@ -33,7 +33,7 @@ func NewSubscriber(list []string) *Subscriber {
 
 	s := &Subscriber{
 		AccessKey:     fmt.Sprintf("IO-%s-SUB", CreateRandString()),
-		MapTopicIndex: map[string]int{},
+		MapTopicIndex: make(map[string]int),
 	}
 
 	for _, value := range list {
