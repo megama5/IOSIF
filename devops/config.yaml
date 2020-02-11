@@ -1,0 +1,7 @@
+server:
+  port: 7000
+manager:
+  messageChannelBufferSize: 50
+  workersCount: 5
+topics:
+  - "users"
