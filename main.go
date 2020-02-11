@@ -1,14 +1,12 @@
 package main
 
 import (
-	"IOSIF/bootstrap"
-	"fmt"
+	"IOSIF/core"
 	"log"
 )
 
 func main() {
-	fmt.Println("IOSIF woke up")
-	if err := bootstrap.Run(); err != nil {
+	if err := core.Init(); err != nil {
 		log.Fatal(err)
 	}
 }

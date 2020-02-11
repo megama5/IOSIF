@@ -1,41 +1,37 @@
 package config
 
 import (
-	"fmt"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
-type ServerConfig struct {
-	Port int    `yaml:"port"`
-	Host string `yaml:"host"`
-	Path string `yaml:"path"`
+type Server struct {
+	Port string `yaml:"port"`
 }
 
-type ManagerConfig struct {
-	MaxWorkers        int   `yaml:"maxWorkers"`
-	ChannelBufferSize int   `yaml:"channelBufferSize"`
-	MessageLifetime   int64 `yaml:"messageLifetime"`
-}
-
-type DataBaseConfig struct {
-	Driver   string `yaml:"driver"`
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	DBName   string `yaml:"dbName"`
-	SSLMode  bool   `yaml:"sslMode"`
+type Manager struct {
+	MessageChannelBufferSize int `yaml:"messageChannelBufferSize"`
+	WorkersCount             int `yaml:"workersCount"`
 }
 
 type Config struct {
-	Server   ServerConfig   `yaml:"server"`
-	Manager  ManagerConfig  `yaml:"manager"`
-	DataBase DataBaseConfig `yaml:"database"`
+	Server  Server   `yaml:"server"`
+	Manager Manager  `yaml:"manager"`
+	Topics  []string `yaml:"topics"`
 }
 
-func (c *Config) GetPath() string {
+func ReadConfig(configPath string) (*Config, error) {
 
-	path := c.Server.Host
-	if c.Server.Host == "" {
-		path = "localhost"
+	var conf Config
+	yamlFile, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		return nil, err
 	}
 
-	return fmt.Sprint(path, ":", c.Server.Port, c.Server.Path)
+	err = yaml.Unmarshal(yamlFile, &conf)
+	if err != nil {
+		return nil, err
+	}
+
+	return &conf, nil
 }
