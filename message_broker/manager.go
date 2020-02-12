@@ -43,8 +43,6 @@ func Init(conf *config.Config) *Manager {
 		}
 	}
 
-	manager.StartWorkers()
-
 	return manager
 }
 
