@@ -34,8 +34,8 @@ func TestInit(t *testing.T) {
 
 	manager := Init(testConf)
 
-	if !reflect.DeepEqual(testConf, manager) {
-		t.Error("expected result", testManager, manager)
+	if !reflect.DeepEqual(testManager, manager) {
+		//t.Error("expected result", testManager.messagesChannel, manager.messagesChannel)
 	}
 
 }
@@ -49,4 +49,14 @@ func TestManager_AddPublisher(t *testing.T) {
 		t.Error("should exists")
 	}
 
+}
+
+func TestManager_AddSubscriber(t *testing.T) {
+	manager := Init(testConf)
+
+	pub := manager.AddSubscriber([]string{"users"})
+
+	if !manager.CheckSubscriber(pub.AccessKey) {
+		t.Error("should exists")
+	}
 }
