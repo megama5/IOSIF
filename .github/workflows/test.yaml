@@ -1,6 +1,6 @@
 name: IOSIF tests itself
 on:
-  pull_request:
+  push:
     branches:
       - master
       - dev
