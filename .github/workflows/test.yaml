@@ -4,4 +4,8 @@ on:
     branches:
       - master
       - dev
-    run: echo test
+jobs:
+  run_unit_tests:
+    steps:
+      - name: run tetsts
+        run: echo test
