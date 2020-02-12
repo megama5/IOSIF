@@ -15,6 +15,7 @@ func Init() error {
 	}
 
 	broker = message_broker.Init(conf)
+	broker.StartWorkers()
 
 	return SetupServer(Router())
 }
