@@ -2,8 +2,8 @@ name: IOSIF tests itself
 on: [push]
 jobs:
 
-  build:
-    name: Build
+  tests:
+    name: Unit test
     runs-on: ubuntu-latest
     steps:
       - name: Check out code into the Go module directory
