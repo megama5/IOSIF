@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code into the Go module directory
-        uses: workflows/checkout@v2
+        uses: actions/checkout@v2
 
       - name: Set up Go 1.13
         uses: actions/setup-go@v1
@@ -15,9 +15,8 @@ jobs:
           go-version: 1.13
         id: go
 
-
-#      - name: run tetsts
-#        run: |
-#            ls
-#            cd ../IOSIF/devops
-#            ls
+      - name: run tetsts
+        run: |
+            ls
+            cd ../IOSIF/devops
+            ls
