@@ -12,3 +12,5 @@ jobs:
       - name: run tetsts
         run: |
             ls
+            cd ../
+            ls
