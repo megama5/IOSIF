@@ -1,0 +1,7 @@
+name: IOSIF tests itself
+on:
+  pull_request:
+    branches:
+      - master
+      - dev
+    run: echo test
