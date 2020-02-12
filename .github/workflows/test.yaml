@@ -17,6 +17,6 @@ jobs:
 
       - name: run tetsts
         run: |
-            ls
-            cd ../IOSIF/devops
-            ls
+            go test ./message_broker -cover -v
+            go test ./core -cover
+
