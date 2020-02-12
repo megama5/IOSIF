@@ -10,7 +10,7 @@ jobs:
           go-version: 1.13
         id: go
       - name: Clone repo
-        uses: ations/checkout@v1
+        uses: ations/checkout@v2
       - name: run tetsts
         run: |
             ls
