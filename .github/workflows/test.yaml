@@ -9,4 +9,4 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - name: run tetsts
-        run: echo $ls
+        run: echo $GOPATH
