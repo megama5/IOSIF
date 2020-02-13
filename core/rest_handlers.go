@@ -2,7 +2,10 @@ package core
 
 import (
 	"IOSIF/message_broker"
+	"IOSIF/utils"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 )
 
@@ -14,9 +17,11 @@ func AddSubscriber(w http.ResponseWriter, r *http.Request) {
 
 	subscriber := broker.AddSubscriber(topicsList)
 
+	utils.LogMessageWithData("adding new subscriber", subscriber)
+
 	response, err := json.Marshal(subscriber)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		utils.WithErrorResponse(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -28,9 +33,12 @@ func AddSubscriber(w http.ResponseWriter, r *http.Request) {
 //Publisher
 func AddPublisher(w http.ResponseWriter, r *http.Request) {
 	publisher := broker.AddPublisher()
+
+	utils.LogMessageWithData("adding new publisher", publisher)
+
 	response, err := json.Marshal(publisher)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		utils.WithErrorResponse(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -44,7 +52,7 @@ func EmitMessage(w http.ResponseWriter, r *http.Request) {
 	accessKey := r.Header.Get(ACCESS_KEY)
 	topic := r.URL.Query().Get(TOPIC)
 	if accessKey == "" || topic == "" || !broker.CheckPublisher(accessKey) || !broker.CheckTopic(topic) {
-		w.WriteHeader(http.StatusNotFound)
+		utils.WithErrorResponse(w, errors.New("don't have access"), http.StatusNotFound)
 		return
 	}
 
@@ -52,12 +60,12 @@ func EmitMessage(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&message)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		utils.WithErrorResponse(w, err, http.StatusBadRequest)
 		return
 	}
 
 	message.Topic = topic
-
+	utils.LogMessageWithData("emit new message", message)
 	broker.PushMessage(message)
 }
 
@@ -71,13 +79,15 @@ func GetMessage(w http.ResponseWriter, r *http.Request) {
 
 	message, err := broker.GetMessage(topic, accessKey)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		utils.WithErrorResponse(w, err, http.StatusBadRequest)
 		return
 	}
 
+	utils.LogMessageWithData(fmt.Sprintf("subscriber %s ask from topic <%s> message", accessKey, topic), message)
+
 	response, err := json.Marshal(message)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		utils.WithErrorResponse(w, err, http.StatusBadRequest)
 		return
 	}
 
