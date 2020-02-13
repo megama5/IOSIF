@@ -19,4 +19,5 @@ jobs:
         run: |
             go test ./message_broker -cover -v
             go test ./core -cover -v
+            go test ./config -cover -v
 
