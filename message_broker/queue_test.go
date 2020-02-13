@@ -17,3 +17,35 @@ func TestNewQueue(t *testing.T) {
 		t.Error("expected result", queue)
 	}
 }
+
+func TestQueue_AddMessage(t *testing.T) {
+	queue := NewQueue()
+	testMessage := Message{
+		Index:     0,
+		Value:     "aaa",
+		Topic:     "users",
+		CreatedAt: 0,
+	}
+
+	queue.AddMessage(testMessage)
+	message, err := queue.GetMessage(0)
+	if err != nil || !reflect.DeepEqual(message, testMessage) {
+		t.Error("expected result", testMessage)
+	}
+}
+
+func TestQueue_GetMessage(t *testing.T) {
+	queue := NewQueue()
+	testMessage := Message{
+		Index:     0,
+		Value:     "aaa",
+		Topic:     "users",
+		CreatedAt: 0,
+	}
+
+	queue.AddMessage(testMessage)
+	message, err := queue.GetMessage(0)
+	if err != nil || !reflect.DeepEqual(message, testMessage) {
+		t.Error("expected result", testMessage)
+	}
+}
